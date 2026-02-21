@@ -1,0 +1,792 @@
+DATABASE CREATE.
+=========
+
+CREATE DATABASE ecommerce_db;
+USE ecommerce_db;
+
+========================================================
+
+CREATTING TABLES.
+=========
+
+CREATE TABLE Categories(
+    category_id INT PRIMARY KEY,
+    category_name VARCHAR(50)
+);
+
+
+CREATE TABLE Products(
+    product_id INT PRIMARY KEY,
+    name VARCHAR(100),
+    category_id INT,
+    price DECIMAL(10,2),
+    stock_quantity INT,
+    added_date DATE,
+    FOREIGN KEY(category_id) REFERENCES Categories(category_id)
+);
+
+
+CREATE TABLE Customers(
+    customer_id INT PRIMARY KEY,
+    name VARCHAR(100),
+    email VARCHAR(100),
+    phone_number VARCHAR(15),
+    address VARCHAR(200),
+    registration_date DATE
+);
+
+
+CREATE TABLE Orders(
+    order_id INT PRIMARY KEY,
+    customer_id INT,
+    order_date DATE,
+    total_amount DECIMAL(10,2),
+    status ENUM('Pending','Shipped','Delivered','Cancelled'),
+    FOREIGN KEY(customer_id) REFERENCES Customers(customer_id)
+);
+
+
+CREATE TABLE Order_Items(
+    order_item_id INT PRIMARY KEY,
+    order_id INT,
+    product_id INT,
+    quantity INT,
+    subtotal DECIMAL(10,2),
+    FOREIGN KEY(order_id) REFERENCES Orders(order_id),
+    FOREIGN KEY(product_id) REFERENCES Products(product_id)
+);
+
+
+CREATE TABLE Payments(
+    payment_id INT PRIMARY KEY,
+    order_id INT,
+    payment_date DATE,
+    payment_method ENUM('Credit Card','PayPal','UPI'),
+    payment_status ENUM('Paid','Pending','Failed'),
+    FOREIGN KEY(order_id) REFERENCES Orders(order_id)
+);
+
+
+CREATE TABLE Shipping(
+    shipping_id INT PRIMARY KEY,
+    order_id INT,
+    shipping_date DATE,
+    delivery_date DATE,
+    shipping_status ENUM('Dispatched','In Transit','Delivered'),
+    FOREIGN KEY(order_id) REFERENCES Orders(order_id)
+);
+
+===============================================================================================
+
+INSERTING VALUES IN CATAGORIES TABLE.
+=============
+
+INSERT INTO Categories VALUES
+(1,'Electronics'),
+(2,'Clothing'),
+(3,'Home Appliances'),
+(4,'Books'),
+(5,'Sports'),
+(6,'Accessories');
+
+SELECT * FROM Categories;
+
+===============================================================================================
+
+INSERTING VALUES IN PRODUCTS TABLE.
+=============
+
+INSERT INTO Products VALUES
+(1,'Laptop',1,65000,10,'2024-01-10'),
+(2,'Smartphone',1,30000,15,'2024-02-01'),
+(3,'Headphones',1,2000,0,'2024-03-05'),
+(4,'T-Shirt',2,800,50,'2024-01-12'),
+(5,'Jeans',2,1500,25,'2024-01-20'),
+(6,'Microwave',3,9000,5,'2024-02-15'),
+(7,'Refrigerator',3,35000,3,'2024-02-18'),
+(8,'Novel Book',4,500,40,'2024-03-01'),
+(9,'Cricket Bat',5,2500,12,'2024-03-02'),
+(10,'Football',5,1200,0,'2024-03-10'),
+(11,'Watch',6,4000,20,'2024-01-11'),
+(12,'Shoes',2,2200,30,'2024-02-05'),
+(13,'Keyboard',1,1500,18,'2024-02-07'),
+(14,'Mouse',1,700,25,'2024-02-08'),
+(15,'Blender',3,3000,9,'2024-03-03'),
+(16,'Fan',3,1800,14,'2024-03-04'),
+(17,'Notebook',4,120,60,'2024-01-15'),
+(18,'Yoga Mat',5,900,22,'2024-02-12'),
+(19,'Cap',6,400,35,'2024-02-20'),
+(20,'Jacket',2,3200,11,'2024-03-09'),
+(21,'Tablet',1,28000,6,'2024-01-30'),
+(22,'Camera',1,55000,4,'2024-02-22'),
+(23,'Speaker',1,5000,8,'2024-02-25'),
+(24,'Cooker',3,2400,13,'2024-03-05'),
+(25,'Story Book',4,350,33,'2024-01-05'),
+(26,'Dumbbells',5,4500,7,'2024-01-28'),
+(27,'Backpack',6,1800,19,'2024-02-27'),
+(28,'Charger',1,600,45,'2024-03-06'),
+(29,'Sweater',2,2100,16,'2024-02-14'),
+(30,'Air Fryer',3,11000,5,'2024-03-11');
+
+SELECT * FROM Products;
+
+===============================================================================================
+
+INSERTING VALUES IN CUSTOMERS TABLE.
+==============
+
+INSERT INTO Customers VALUES
+(1,'  Rahul Shah  ','rahul@gmail.com','9876543210','Surat','2023-01-10'),
+(2,'Priya Patel',NULL,'9876500000','Ahmedabad','2023-03-15'),
+(3,'Amit Kumar','amit@gmail.com','9999999999','Delhi','2024-01-20'),
+(4,'Neha Mehta','neha@gmail.com','8888888888','Mumbai','2022-12-01'),
+(5,'Ravi Singh',NULL,'7777777777','Jaipur','2024-02-02'),
+(6,'Kiran Desai','kiran@gmail.com','6666666666','Pune','2023-07-19'),
+(7,'Anjali Verma','anjali@gmail.com','5555555555','Indore','2024-01-25'),
+(8,'Manish Jain','manish@gmail.com','4444444444','Surat','2023-11-11'),
+(9,'Sneha Roy','sneha@gmail.com','3333333333','Kolkata','2024-02-14'),
+(10,'Vikas Gupta',NULL,'2222222222','Delhi','2023-06-21'),
+(11,'Arjun Nair','arjun@gmail.com','1111111111','Kerala','2024-03-01'),
+(12,'Pooja Sharma','pooja@gmail.com','1231231234','Lucknow','2022-05-10'),
+(13,'Rohit Yadav','rohit@gmail.com','4564564567','Patna','2023-09-17'),
+(14,'Meera Iyer','meera@gmail.com','7897897890','Chennai','2024-01-01'),
+(15,'Kunal Shah',NULL,'9519519510','Surat','2024-02-28'),
+(16,'Dev Patel','dev@gmail.com','8528528520','Rajkot','2023-08-15'),
+(17,'Nisha Jain','nisha@gmail.com','9639639630','Udaipur','2023-04-09'),
+(18,'Tarun Singh','tarun@gmail.com','7417417410','Bhopal','2024-01-19'),
+(19,'Alok Mishra','alok@gmail.com','3693693690','Kanpur','2023-12-05'),
+(20,'Simran Kaur','simran@gmail.com','2582582580','Amritsar','2024-02-09'),
+(21,'Yash Patel','yash@gmail.com','1471471470','Surat','2023-10-20'),
+(22,'Nitin Shah','nitin@gmail.com','9517538520','Vadodara','2024-03-02'),
+(23,'Deepika Rana','deepika@gmail.com','7531598520','Shimla','2023-02-11'),
+(24,'Mohit Agarwal',NULL,'8523697410','Agra','2024-01-30'),
+(25,'Sonal Gupta','sonal@gmail.com','9513578520','Noida','2023-05-18');
+
+SELECT * FROM Customers;
+
+===============================================================================================
+
+INSERTING VALUES IN ORDER TABLE.
+===============
+
+INSERT INTO Orders VALUES
+(1,1,'2024-03-01',65000,'Delivered'),
+(2,2,'2024-03-02',30000,'Pending'),
+(3,3,'2024-03-03',2000,'Shipped'),
+(4,4,'2024-03-04',800,'Cancelled'),
+(5,5,'2024-03-05',1500,'Delivered'),
+(6,6,'2024-03-06',9000,'Delivered'),
+(7,7,'2024-03-07',2500,'Pending'),
+(8,8,'2024-03-08',1200,'Shipped'),
+(9,9,'2024-03-09',4000,'Delivered'),
+(10,10,'2024-03-10',2200,'Cancelled'),
+(11,11,'2024-03-11',1500,'Delivered'),
+(12,12,'2024-03-12',700,'Pending'),
+(13,13,'2024-03-13',3000,'Delivered'),
+(14,14,'2024-03-14',1800,'Shipped'),
+(15,15,'2024-03-15',120,'Delivered'),
+(16,16,'2024-03-16',900,'Pending'),
+(17,17,'2024-03-17',400,'Delivered'),
+(18,18,'2024-03-18',3200,'Delivered'),
+(19,19,'2024-03-19',28000,'Shipped'),
+(20,20,'2024-03-20',55000,'Delivered'),
+(21,21,'2024-03-21',5000,'Pending'),
+(22,22,'2024-03-22',2400,'Delivered'),
+(23,23,'2024-03-23',350,'Cancelled'),
+(24,24,'2024-03-24',4500,'Delivered'),
+(25,25,'2024-03-25',1800,'Delivered'),
+(26,1,'2024-03-26',600,'Pending'),
+(27,2,'2024-03-27',2100,'Delivered'),
+(28,3,'2024-03-28',11000,'Shipped'),
+(29,4,'2024-03-29',500,'Delivered'),
+(30,5,'2024-03-30',2500,'Pending');
+
+SELECT * FROM Orders;
+
+===============================================================================================
+
+INSERTING VALUES IN ORDER_ITEMS TABLE.
+===============
+
+INSERT INTO Order_Items VALUES
+(1,1,1,1,65000),
+(2,2,2,1,30000),
+(3,3,3,1,2000),
+(4,4,4,1,800),
+(5,5,5,1,1500),
+(6,6,6,1,9000),
+(7,7,9,1,2500),
+(8,8,10,1,1200),
+(9,9,11,1,4000),
+(10,10,12,1,2200),
+(11,11,13,1,1500),
+(12,12,14,1,700),
+(13,13,15,1,3000),
+(14,14,16,1,1800),
+(15,15,17,1,120),
+(16,16,18,1,900),
+(17,17,19,1,400),
+(18,18,20,1,3200),
+(19,19,21,1,28000),
+(20,20,22,1,55000),
+(21,21,23,1,5000),
+(22,22,24,1,2400),
+(23,23,25,1,350),
+(24,24,26,1,4500),
+(25,25,27,1,1800),
+(26,26,28,1,600),
+(27,27,29,1,2100),
+(28,28,30,1,11000),
+(29,29,8,1,500),
+(30,30,9,1,2500);
+
+SELECT * FROM Order_Items;
+
+===============================================================================================
+
+INSERTING VALUES IN PAYMENTS TABLE.
+===============
+
+INSERT INTO Payments VALUES
+(1,1,'2024-03-01','UPI','Paid'),
+(2,2,NULL,'Credit Card','Pending'),
+(3,3,'2024-03-03','PayPal','Paid'),
+(4,4,NULL,'UPI','Failed'),
+(5,5,'2024-03-05','UPI','Paid'),
+(6,6,'2024-03-06','Credit Card','Paid'),
+(7,7,NULL,'UPI','Pending'),
+(8,8,'2024-03-08','PayPal','Paid'),
+(9,9,'2024-03-09','UPI','Paid'),
+(10,10,NULL,'Credit Card','Failed'),
+(11,11,'2024-03-11','UPI','Paid'),
+(12,12,NULL,'UPI','Pending'),
+(13,13,'2024-03-13','PayPal','Paid'),
+(14,14,'2024-03-14','Credit Card','Paid'),
+(15,15,'2024-03-15','UPI','Paid'),
+(16,16,NULL,'UPI','Pending'),
+(17,17,'2024-03-17','PayPal','Paid'),
+(18,18,'2024-03-18','UPI','Paid'),
+(19,19,'2024-03-19','Credit Card','Paid'),
+(20,20,'2024-03-20','UPI','Paid'),
+(21,21,NULL,'UPI','Pending'),
+(22,22,'2024-03-22','PayPal','Paid'),
+(23,23,NULL,'Credit Card','Failed'),
+(24,24,'2024-03-24','UPI','Paid'),
+(25,25,'2024-03-25','UPI','Paid'),
+(26,26,NULL,'UPI','Pending'),
+(27,27,'2024-03-27','Credit Card','Paid'),
+(28,28,'2024-03-28','PayPal','Paid'),
+(29,29,'2024-03-29','UPI','Paid'),
+(30,30,NULL,'UPI','Pending');
+
+SELECT * FROM Payments;
+
+===============================================================================================
+
+INSERTING VALUES IN ORDER TABLE.
+===============
+
+INSERT INTO Shipping VALUES
+(1,1,'2024-03-02','2024-03-05','Delivered'),
+(2,2,'2024-03-03',NULL,'In Transit'),
+(3,3,'2024-03-04',NULL,'Dispatched'),
+(4,4,NULL,NULL,'Dispatched'),
+(5,5,'2024-03-06','2024-03-09','Delivered'),
+(6,6,'2024-03-07','2024-03-10','Delivered'),
+(7,7,'2024-03-08',NULL,'In Transit'),
+(8,8,'2024-03-09',NULL,'Dispatched'),
+(9,9,'2024-03-10','2024-03-12','Delivered'),
+(10,10,NULL,NULL,'Dispatched'),
+(11,11,'2024-03-12','2024-03-15','Delivered'),
+(12,12,'2024-03-13',NULL,'In Transit'),
+(13,13,'2024-03-14','2024-03-17','Delivered'),
+(14,14,'2024-03-15',NULL,'Dispatched'),
+(15,15,'2024-03-16','2024-03-18','Delivered'),
+(16,16,'2024-03-17',NULL,'In Transit'),
+(17,17,'2024-03-18','2024-03-20','Delivered'),
+(18,18,'2024-03-19','2024-03-22','Delivered'),
+(19,19,'2024-03-20',NULL,'In Transit'),
+(20,20,'2024-03-21','2024-03-25','Delivered'),
+(21,21,'2024-03-22',NULL,'Dispatched'),
+(22,22,'2024-03-23','2024-03-26','Delivered'),
+(23,23,NULL,NULL,'Dispatched'),
+(24,24,'2024-03-25','2024-03-28','Delivered'),
+(25,25,'2024-03-26','2024-03-29','Delivered'),
+(26,26,'2024-03-27',NULL,'In Transit'),
+(27,27,'2024-03-28','2024-03-30','Delivered'),
+(28,28,'2024-03-29',NULL,'Dispatched'),
+(29,29,'2024-03-30','2024-04-02','Delivered'),
+(30,30,'2024-03-31',NULL,'In Transit');
+
+SELECT * FROM Shipping;
+
+===============================================================================================
+
+TASKS & FUNCTIONALITY.
+
+===============================================================================================
+IMPLEMENT CRUD OPERATIONS.
+===============================================================================================
+INSERT NEW PRODUCT, CUSTOMERS AND ORDERS INTO THE DATABASE.
+==============================
+
+INSERT INTO Products
+(product_id, name, category_id, price, stock_quantity, added_date)
+VALUES
+(31,'Gaming Mouse',1,2500,20,CURDATE());
+
+
+INSERT INTO Customers
+(customer_id, name, email, phone_number, address, registration_date)
+VALUES
+(26,'Harsh Patel','harsh@gmail.com','9998887776','Surat',CURDATE());
+
+
+INSERT INTO Orders
+(order_id, customer_id, order_date, total_amount, status)
+VALUES
+(31,26,CURDATE(),2500,'Pending');
+
+
+INSERT INTO Order_Items
+(order_item_id, order_id, product_id, quantity, subtotal)
+VALUES
+(31,31,31,1,2500);
+
+===============================================================================================
+UPDATE STOCK WHENE AN ORDER IS PLACED.
+================================
+
+UPDATE Products
+SET stock_quantity = stock_quantity - 1
+WHERE product_id = 31;
+
+===============================================================================================
+DELETE ORDERS THAT WERE CANCELLED MORE THAN 30 DAYS AGO.
+=================================
+
+DELETE oi
+FROM Order_Items AS oi
+JOIN Orders AS o
+ON oi.order_id = o.order_id
+WHERE o.status = 'Cancelled'
+AND o.order_date < CURDATE() - INTERVAL 30 DAY;
+
+DELETE p
+FROM Payments AS p
+JOIN Orders AS o
+ON p.order_id = o.order_id
+WHERE o.status='Cancelled'
+AND o.order_date < CURDATE() - INTERVAL 30 DAY;
+
+DELETE s
+FROM Shipping AS s
+JOIN Orders AS o
+ON s.order_id = o.order_id
+WHERE o.status='Cancelled'
+AND o.order_date < CURDATE() - INTERVAL 30 DAY;
+
+DELETE FROM Orders AS o
+WHERE o.status='Cancelled'
+AND o.order_date < CURDATE() - INTERVAL 30 DAY;
+
+===============================================================================================
+2. USE SQL CLAUSES(WHERE, HAVING, LIMIT)
+===============================================================================================
+FIND ALL ORDERS PLASED IN THE LAST 6 MONTHS.
+================================
+
+SELECT *
+FROM Orders
+WHERE order_date >= CURDATE() - INTERVAL 6 MONTH;
+
+===============================================================================================
+GET THE TOP 5 HIGHEST PRICE PRODUCT.
+=================================
+
+SELECT * FROM Products 
+ORDER BY price DESC
+LIMIT 5;
+
+===============================================================================================
+FIND THE CUSTOMER WHO HAVE PLACED MORE THAN 1 PRODUCT.
+=====================================
+
+SELECT c.customer_id, c.name,
+COUNT(o.order_id) AS total_orders
+FROM Customers AS c
+JOIN Orders AS o
+ON c.customer_id = o.customer_id
+GROUP BY c.customer_id, c.name
+HAVING COUNT(o.order_id) > 1;
+
+===============================================================================================
+3. APPLY SQL OPERATORS.(AND, OR, NOT)
+===============================================================================================
+GET ALL ORDERS WHERE status = 'Pending' AND payment_status = 'Paid'
+====================================
+
+SELECT o.order_id, o.status, p.payment_status
+FROM Orders AS o
+JOIN Payments AS p
+ON o.order_id = p.order_id
+WHERE o.status = 'Pending'
+AND p.payment_status = 'Paid';
+
+===============================================================================================
+FIND ALL PRODUCTS THAT ARE NOT OUT OF STOCK.
+=================================
+
+SELECT *
+FROM Products
+WHERE NOT stock_quantity = 0;
+
+===============================================================================================
+RETRIEVE CUSTOMERS WHO REGISTERED AFTER 2022 OR HAVE MADE PURCHASES ABOVE 10000.
+==================================
+
+SELECT DISTINCT c.customer_id, c.name, c.registration_date, o.total_amount
+FROM Customers AS c
+LEFT JOIN Orders AS o
+ON c.customer_id = o.customer_id
+WHERE c.registration_date > '2022-12-31'
+OR o.total_amount > 10000;
+
+===============================================================================================
+4. SORTING & GROUPING DATA (ORDER BY, GROUP BY)
+===============================================================================================
+LIST ALL PRODUCTS SORTED BY PRICE IN DESCENDING ORDER
+====================================
+
+SELECT *
+FROM Products
+ORDER BY price DESC;
+
+===============================================================================================
+DISPLAY THE NUMBER OF ORDERS PLACED BY EACH CUSTOMER.
+====================================
+
+SELECT c.customer_id, c.name, COUNT(o.order_id) AS total_orders
+FROM Customers AS c
+JOIN Orders AS o
+ON c.customer_id = o.customer_id
+GROUP BY c.customer_id, c.name;
+
+===============================================================================================
+SHOW TOTAL REVENUE GENERATED PER CATEGORY
+====================================
+
+SELECT cat.category_name, SUM(oi.subtotal) AS total_revenue
+FROM Categories AS cat
+JOIN Products AS p
+ON cat.category_id = p.category_id
+JOIN Order_Items AS oi
+ON p.product_id = oi.product_id
+GROUP BY cat.category_name;
+
+===============================================================================================
+5. USE AGGREGATE FUNCTIONS (SUM, AVG, MAX, MIN, COUNT)
+===============================================================================================
+FIND THE TOTAL REVENUE GENERATED BY THE STORE
+====================================
+
+SELECT SUM(total_amount) AS total_revenue
+FROM Orders
+WHERE status = 'Delivered';
+
+===============================================================================================
+IDENTIFY THE MOST PURCHASED PRODUCT
+==================================
+
+SELECT p.name, SUM(oi.quantity) AS total_quantity_sold
+FROM Products AS p
+JOIN Order_Items AS oi
+ON p.product_id = oi.product_id
+GROUP BY p.name
+ORDER BY total_quantity_sold DESC
+LIMIT 1;
+
+===============================================================================================
+CALCULATE THE AVERAGE ORDER VALUE
+================================
+
+SELECT AVG(total_amount) AS average_order_value
+FROM Orders
+WHERE status = 'Delivered';
+
+===============================================================================================
+6. ESTABLISH PRIMARY & FOREIGN KEY RELATIONSHIPS
+===============================================================================================
+ENSURE ORDERS ARE LINKED TO CUSTOMERS AND PRODUCTS
+============================================================
+
+SELECT o.order_id, c.customer_id, c.name, p.product_id, p.name
+FROM Orders AS o
+JOIN Customers AS c
+ON o.customer_id = c.customer_id
+JOIN Order_Items AS oi
+ON o.order_id = oi.order_id
+JOIN Products AS p
+ON oi.product_id = p.product_id;
+
+===============================================================================================
+ESTABLISH RELATIONSHIPS BETWEEN PAYMENTS AND ORDERS
+============================================================
+
+SELECT o.order_id, o.status, p.payment_id, p.payment_method, p.payment_status
+FROM Orders AS o
+JOIN Payments AS p
+ON o.order_id = p.order_id;
+
+===============================================================================================
+7. IMPLEMENT JOINS
+===============================================================================================
+RETRIEVE A LIST OF PRODUCTS ALONG WITH THEIR CATEGORY NAMES USING INNER JOIN
+============================================================
+
+SELECT p.product_id, p.name, c.category_name
+FROM Products AS p
+INNER JOIN Categories AS c
+ON p.category_id = c.category_id;
+
+===============================================================================================
+GET ALL ORDERS WITH CUSTOMER DETAILS USING LEFT JOIN
+============================================================
+
+SELECT o.order_id, o.order_date, o.status, c.customer_id, c.name
+FROM Orders AS o
+LEFT JOIN Customers AS c
+ON o.customer_id = c.customer_id;
+
+------------------------------------------------------------
+FIND ORDERS THAT HAVEN'T BEEN SHIPPED USING RIGHT JOIN
+============================================================
+
+SELECT s.shipping_id, s.shipping_status, o.order_id, o.status
+FROM Shipping AS s
+RIGHT JOIN Orders AS o
+ON s.order_id = o.order_id
+WHERE s.shipping_id IS NULL;
+
+------------------------------------------------------------
+SHOW CUSTOMERS WHO HAVE NEVER PLACED AN ORDER USING FULL OUTER JOIN
+============================================================
+
+SELECT c.customer_id, c.name, o.order_id
+FROM Customers AS c
+LEFT JOIN Orders AS o
+ON c.customer_id = o.customer_id
+UNION
+SELECT c.customer_id, c.name, o.order_id
+FROM Customers AS c
+RIGHT JOIN Orders AS o
+ON c.customer_id = o.customer_id
+WHERE c.customer_id IS NULL;
+
+===============================================================================================
+8. USE SUBQUERIES
+===============================================================================================
+FIND ORDERS PLACED BY CUSTOMERS WHO REGISTERED AFTER 2022
+============================================================
+
+SELECT *
+FROM Orders
+WHERE customer_id IN (
+    SELECT customer_id
+    FROM Customers
+    WHERE registration_date > '2022-12-31'
+);
+
+------------------------------------------------------------
+IDENTIFY THE CUSTOMER WHO HAS SPENT THE MOST
+============================================================
+
+SELECT *
+FROM Customers
+WHERE customer_id = (
+    SELECT customer_id
+    FROM Orders
+    GROUP BY customer_id
+    ORDER BY SUM(total_amount) DESC
+    LIMIT 1
+);
+
+------------------------------------------------------------
+GET PRODUCTS THAT HAVE NEVER BEEN ORDERED
+============================================================
+
+SELECT *
+FROM Products
+WHERE product_id NOT IN (
+    SELECT product_id
+    FROM Order_Items
+);
+
+===============================================================================================
+9. IMPLEMENT DATE & TIME FUNCTIONS
+===============================================================================================
+EXTRACT THE MONTH FROM ORDER_DATE TO COUNT ORDERS PER MONTH
+============================================================
+
+SELECT MONTH(order_date) AS order_month,
+COUNT(order_id) AS total_orders
+FROM Orders
+GROUP BY MONTH(order_date);
+
+------------------------------------------------------------
+CALCULATE THE DELIVERY TIME BY FINDING THE DIFFERENCE BETWEEN SHIPPING_DATE AND DELIVERY_DATE
+============================================================
+
+SELECT order_id,
+DATEDIFF(delivery_date, shipping_date) AS delivery_days
+FROM Shipping;
+
+------------------------------------------------------------
+FORMAT ORDER_DATE AS DD-MM-YYYY
+============================================================
+
+SELECT order_id,
+DATE_FORMAT(order_date, '%d-%m-%Y') AS formatted_order_date
+FROM Orders;
+
+===============================================================================================
+10. USE STRING MANIPULATION FUNCTIONS
+===============================================================================================
+CONVERT ALL PRODUCT NAMES TO UPPERCASE
+============================================================
+
+SELECT UPPER(name) AS product_name
+FROM Products;
+
+------------------------------------------------------------
+TRIM WHITESPACE FROM CUSTOMER NAMES
+============================================================
+
+SELECT TRIM(name) AS customer_name
+FROM Customers;
+
+------------------------------------------------------------
+REPLACE MISSING EMAIL VALUES WITH "NOT PROVIDED"
+============================================================
+
+SELECT 
+IFNULL(email, 'Not Provided') AS email
+FROM Customers;
+
+===============================================================================================
+11. IMPLEMENT WINDOW FUNCTIONS
+===============================================================================================
+RANK CUSTOMERS BASED ON TOTAL SPENDING
+============================================================
+
+SELECT c.customer_id, c.name,
+SUM(o.total_amount) AS total_spending,
+RANK() OVER (ORDER BY SUM(o.total_amount) DESC) AS spending_rank
+FROM Customers AS c
+JOIN Orders AS o
+ON c.customer_id = o.customer_id
+GROUP BY c.customer_id, c.name;
+
+------------------------------------------------------------
+SHOW THE CUMULATIVE TOTAL REVENUE PER MONTH
+============================================================
+
+SELECT 
+MONTH(order_date) AS order_month,
+SUM(total_amount) AS monthly_revenue,
+SUM(SUM(total_amount)) OVER (ORDER BY MONTH(order_date)) AS cumulative_revenue
+FROM Orders
+GROUP BY MONTH(order_date);
+
+------------------------------------------------------------
+DISPLAY THE RUNNING TOTAL OF ORDERS PLACED
+============================================================
+
+SELECT order_id, order_date,
+COUNT(order_id) OVER (ORDER BY order_date) AS running_total_orders
+FROM Orders;
+
+===============================================================================================
+12. APPLY SQL CASE EXPRESSIONS
+===============================================================================================
+ASSIGN A LOYALTY_STATUS TO CUSTOMERS
+============================================================
+
+SELECT c.customer_id, c.name,
+SUM(o.total_amount) AS total_spending,
+CASE
+    WHEN SUM(o.total_amount) > 50000 THEN 'Gold'
+    WHEN SUM(o.total_amount) BETWEEN 20000 AND 50000 THEN 'Silver'
+    ELSE 'Bronze'
+END AS Loyalty_Status
+FROM Customers AS c
+JOIN Orders AS o
+ON c.customer_id = o.customer_id
+GROUP BY c.customer_id, c.name;
+
+------------------------------------------------------------
+CATEGORIZE PRODUCTS BASED ON TOTAL UNITS SOLD
+============================================================
+
+SELECT p.product_id, p.name,
+SUM(oi.quantity) AS total_units_sold,
+CASE
+    WHEN SUM(oi.quantity) > 500 THEN 'Best Seller'
+    WHEN SUM(oi.quantity) BETWEEN 200 AND 500 THEN 'Popular'
+    ELSE 'Regular'
+END AS Product_Category
+FROM Products AS p
+JOIN Order_Items AS oi
+ON p.product_id = oi.product_id
+GROUP BY p.product_id, p.name;
+
+===============================================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
